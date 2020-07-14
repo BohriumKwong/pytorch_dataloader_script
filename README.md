@@ -253,6 +253,9 @@ class VisionDataset(data.Dataset):
     def extra_repr(self):
         return ""
 ```
+
+![](./pic/3.jpg)
+
 是不是看得怀疑人生了，尤其是这样绕来绕去的，不过好消息是，其实你就算没耐性仔细读```VisionDataset```的代码，你至少只需要了解到，```VisionDataset```类是继承```torch.utils.data.Dataset```就足够了，因为这个类，才是我们从入门到入魔的关键。
 
 
@@ -392,6 +395,8 @@ def make_dataset(dir, class_to_idx, breed_class,extensions=['jpg', 'jpeg', 'png'
 2 开发一个新的dataset和dataloader函数，支持直接读取对复杂的层次目录的数据集，并且train和val子集的划分在dataset方法层面中进行，而不依赖于外部的路径划分
 
 3 支持更高级的文件loader方法，如```openslide```格式的图片的数据源的读取
+
+![](./pic/2.jpg)
 
 ### 参考方法 ###
 https://github.com/BohriumKwong/pytorch_data_augmention_loader
