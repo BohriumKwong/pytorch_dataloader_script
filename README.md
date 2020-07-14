@@ -11,7 +11,7 @@
 
 作为新时代的入坑的计算机视觉工程师，假设你已经知道怎么把CNN跑起来~~，可以什么都不懂什么都不管，遇事直接怼CNN~~。
 
-![](https://github.com/BohriumKwong/pytorch_dataloader_script/blob/master/pic/1.jpg)
+![](./pic/1.jpg)
 
 不过该有的修养你还是要知道，比如要知道最基本的图像分类任务，数据文件格式和数据目录结构是怎样的。以喜闻乐见的猫狗大战数据集为例:
 ```python
