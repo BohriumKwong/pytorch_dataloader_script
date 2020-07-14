@@ -1,4 +1,4 @@
-# pytorch datalader之從入門到入魔(CV方向篇) #
+# pytorch dataloader之從入門到入魔(CV方向篇) #
 
 
 ##  torch version ##
@@ -9,7 +9,7 @@
 ****
 ## 炼丹学徒(调包侠)的自我修养 ##
 
-作为新时代的入坑的计算机视觉工程师，可以什么都不懂什么都不管，遇事直接怼CNN(才怪)。不过该有的修养你还是要知道，比如要知道最基本的图像分类任务，数据文件格式和数据目录结构是怎样的。以喜闻乐见的猫狗大战数据集为例:
+作为新时代的入坑的计算机视觉工程师，假设你已经知道怎么把CNN跑起来~~，可以什么都不懂什么都不管，遇事直接怼CNN~~。不过该有的修养你还是要知道，比如要知道最基本的图像分类任务，数据文件格式和数据目录结构是怎样的。以喜闻乐见的猫狗大战数据集为例:
 ```python
     """A generic data loader where the images are arranged in this way: ::
 
@@ -62,7 +62,7 @@ dataloaders = torch.utils.data.DataLoader(image_datasets, batch_size = batch_siz
 
 这个问题当然难不倒朴实无华的炼丹学徒，他们灵机一动，将整个数据集完整复制一份**{origin_dataset}**→**{new_copy_dataset}**，然后将复制的那份数据从三层结构调整到二层结构，验证的时候再用原来的数据集不就好了？如果他们有项目leader，一定会感到很欣慰，然后只能用关怀智障的眼神盯着他们——开喷：所以就为了个不足道的原因将整个数据集再复制多一次?!你不嫌累我也嫌你这样操作太占用硬盘空间了！
 
-当然，这并非是问题的全部，一般来说我们为了验证模型的准确性，都会要求做K-FOLDs交叉验证，于是，交叉验证的数据集怎么来？朴实无华的炼丹学徒坚守```torchvison.datasets```，永不为奴，会跟你说:一把梭，每一FOLDs复制一次整体数据集不就好了嘛！
+当然，这并非是问题的全部，一般来说我们为了验证模型的准确性，都会要求做K-FOLDs交叉验证，于是，交叉验证的数据集怎么来？朴实无华的炼丹学徒坚守```torchvison.datasets.folder.ImageFolder```，永不为奴，会跟你说:一把梭，每一FOLD复制一次整体数据集不就好了嘛！
 
 千万不要以为我在开玩笑，我真的见过有人是这样做的，唉(当然那个人不是我，不是我，不是我，重要的问题说三次)
 
@@ -71,7 +71,7 @@ dataloaders = torch.utils.data.DataLoader(image_datasets, batch_size = batch_siz
 
 ## 初识torchvision中的datasets.ImageFolder ##
 
-既然我们已经知道```datasets.ImageFolder```只能适用于新手村那样任务是白给的场景，想要摆脱它的限制，就先要对它的构造有一定的认识，喜闻乐见的趴源代码环节要来了(毕竟做深度学习不是别人请你吃饭，可以不管庖厨的事务。不要以为世界这么美好，不会查看源代码也不会自己开发改进版的工具的情况下有人什么都帮你做好了就差你来进行调包训练)。下面是```torchvision.dataset.folder```中比较核心的代码段:
+既然我们已经知道```datasets.ImageFolder```只能适用于新手村那样任务是白给的场景，想要摆脱它的限制，就先要对它的构造有一定的认识，喜闻乐见的趴源代码环节要来了(*毕竟做计算机视觉不是别人请你吃饭——饭菜直接给你端上来可以不管庖厨的事务。不要以为世界这么美好，不会查看源代码也不会自己开发改进版的工具的情况下有人什么都帮你做好了，就差你来进行调包训练？真的万事俱备了还要你作甚*)。下面是```torchvision.dataset.folder```中比较核心的代码段:
 ```python
 def make_dataset(dir, class_to_idx, extensions=None, is_valid_file=None):
     images = []
@@ -200,7 +200,7 @@ class ImageFolder(DatasetFolder):
                                           is_valid_file=is_valid_file)
         self.imgs = self.samples
 ```
-需要重点留意一下```make_dataset```方法的定义，它本质上就是用python自带的```os.walk(root)```的方法来遍历二级目录下有文件并将符合的文件塞进名为image的列表中然后将其返回。然后就是类```DatasetFolder(VisionDataset)```的```find_classes```方法，生成label→class_to_idx的映射字典,以猫狗大战的数据集为例就是**{'cat':0,'dog':1}**。之后```ImageFolder```类是继承```DatasetFolder```的，而```DatasetFolder```是继承```VisionDataset```的。最后，我们来看一下```VisionDataset```的定义：
+需要重点留意一下```make_dataset```方法的定义，它本质上就是用Python自带的```os.walk(root)```的方法来遍历二级目录下有文件并将符合的文件塞进名为image的列表中然后将其返回。然后就是类```DatasetFolder(VisionDataset)```的```find_classes```方法，生成label→class_to_idx的映射字典,以猫狗大战的数据集为例就是**{'cat':0,'dog':1}**。之后```ImageFolder```类是继承```DatasetFolder```的，而```DatasetFolder```是继承```VisionDataset```的。最后，我们来看一下```VisionDataset```的定义：
 ```python
 class VisionDataset(data.Dataset):
     _repr_indent = 4
