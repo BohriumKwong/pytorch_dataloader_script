@@ -498,7 +498,7 @@ import PIL.Image as Image
 import random
 
 class simple_dataset(data.Dataset):
-    def __init__(self, data_list=None,label_list = None，shuffle = False):
+    def __init__(self, data_list=None,label_list = None, shuffle = False):
         self.data_source = [(data_list[x], label_list[x]) for x in range(len(data_list))]
         # 这一步相当于简易版的make_dateset方法，注意到data_source的list中每一个内容都是一个二元元组，前者是data，后者是label
         self.shuffle = shuffle
