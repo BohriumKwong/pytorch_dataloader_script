@@ -13,7 +13,7 @@
 
 ![](./pic/1.jpg)
 
-不过该有的修养你还是要知道，比如要知道最基本的图像分类任务，数据文件格式和数据目录结构是怎样的。以喜闻乐见的猫狗大战数据集为例:
+不过该有的修养你还是要有，比如要知道最基本的图像分类任务，数据文件格式和数据目录结构是怎样的。以喜闻乐见的猫狗大战数据集为例:
 ```python
     """A generic data loader where the images are arranged in this way: ::
 
@@ -28,7 +28,7 @@
         ……
     """
 ```
-只要是类似**root/class_name/×××{'.jpg', '.jpeg', '.png', '.ppm', '.bmp', '.pgm', '.tif', '.tiff', '.webp'}**这样的文件结构的数据集，都可以直接无脑地调用```torchvison```中已经提供好的```datasets.ImageFolder```,非常便捷完成这个数据集的dataloader定义:
+只要是类似**root/class_name/×××{'.jpg', '.jpeg', '.png', '.ppm', '.bmp', '.pgm', '.tif', '.tiff', '.webp'}**这样的文件结构的数据集，都可以直接无脑调用```torchvison```中已经提供好的```datasets.ImageFolder```,非常便捷完成这个数据集的dataloader定义:
 ```python
 from torchvision import datasets, transforms
 data_transforms = transforms.Compose([
@@ -43,11 +43,11 @@ image_datasets = datasets.ImageFolder(root,data_transforms)
 dataloaders = torch.utils.data.DataLoader(image_datasets, batch_size = batch_size, shuffle = True, num_workers=0)
 
 ```
-是不是觉得只需要掌握上边这种调用```torchvison```的方法就能天下我有，什么图像分类任务都不怕了？有时候炼丹学徒的无知就是这么朴实无华且枯燥。
+是不是觉得只需要掌握上边这种调用```torchvison```的方法就能天下我有，什么图像分类任务都不怕了？只能说这些想法实在是**_too young too simple,sometime naive_**。
 
 ## 要准备放弃治疗吗?
 
-还是以上述的猫狗大战数据集为例，现在我的数据场景改变了一下。虽然分类还是那个分类，但是目录结构不再是原来的二层，而是三层(甚至可能更多)，比如多了一个**"breed"**(品种)的标记，结构大概是下面这样子的:
+还是以上述的猫狗大战数据集为例，现在将数据场景稍微改变了一下: 分类还是那个分类，只是目录结构不再是原来的二层，而是三层(甚至可能更多)。比如多了一个**"breed"**(品种)的标记，结构大概是下面这样子的:
 ```python
     """A generic data loader where the images are arranged in this way: ::
 
@@ -62,13 +62,13 @@ dataloaders = torch.utils.data.DataLoader(image_datasets, batch_size = batch_siz
         ……
     """
 ```
-虽然现在还是进行猫狗的大分类，但可能基于某些原因，我们并不是将所有breed的猫和狗都加入训练集/测试集，此外就是最终评价模型的时候希望能以breed为单位显示相应的metrics，那我们该如何整理数据让其顺利加入训练？
+虽然我们的目标还是只进行猫狗这两个大类的分类，但可能基于某些原因，我们并不是将所有breed的猫和狗都加入训练集/测试集，此外就是最终评价模型的时候希望能以breed为单位显示相应的metrics，那我们该如何整理数据让其顺利加入训练？
 
-这个问题当然难不倒朴实无华的炼丹学徒，他们灵机一动，将整个数据集完整复制一份**{origin_dataset}**→**{new_copy_dataset}**，然后将复制的那份数据从三层结构调整到二层结构，验证的时候再用原来的数据集不就好了？如果他们有项目leader，一定会感到很欣慰，然后只能用关怀智障的眼神盯着他们——开喷：所以就为了个不足道的原因将整个数据集再复制多一次?!你不嫌累我也嫌你这样操作太占用硬盘空间了！
+这个问题当然难不倒朴实无华且枯燥的炼丹学徒，他们灵机一动，将整个数据集完整复制一份**{origin_dataset}**→**{new_copy_dataset}**，然后将复制的那份数据从三层结构调整到二层结构，验证的时候再用原来的数据集不就好了？如果他们有项目leader，一定会感到很欣慰，然后只能用关怀智障的眼神盯着他们——开喷：所以就为了个不足道的原因将整个数据集再复制多一次?!你不嫌累我也嫌你这样操作太占用硬盘空间了！
 
-当然，这并非是问题的全部，一般来说我们为了验证模型的准确性，都会要求做K-FOLDs交叉验证，于是，交叉验证的数据集怎么来？朴实无华的炼丹学徒坚守```torchvison.datasets.folder.ImageFolder```，永不为奴，会跟你说:一把梭，每一FOLD复制一次整体数据集不就好了嘛！
+当然，这并非是问题的全部，一般来说我们为了验证模型的准确性，都会要求做K-FOLDs交叉验证，于是，交叉验证的数据集怎么来？朴实无华的炼丹学徒坚守```torchvison.datasets.folder.ImageFolder```，永不为奴，会跟你说:一把梭，每一FOLD复制一次整体数据集再手工划分不就好了嘛！
 
-千万不要以为我在开玩笑，我真的见过有人是这样做的，唉(当然那个人不是我，不是我，不是我，重要的问题说三次)
+千万不要以为我在开玩笑，我是见过真有这样做的。
 
 顺利的炼丹都是相似的，不顺的炼丹各有各的不顺，作为学徒，你确定只会当个```torchvison.datasets```的调包侠就能出师然后行走江湖了吗？
 
@@ -204,7 +204,8 @@ class ImageFolder(DatasetFolder):
                                           is_valid_file=is_valid_file)
         self.imgs = self.samples
 ```
-需要重点留意一下```make_dataset```方法的定义，它本质上就是用Python自带的```os.walk(root)```的方法来遍历二级目录下有文件并将符合的文件塞进名为image的列表中然后将其返回。然后就是类```DatasetFolder(VisionDataset)```的```find_classes```方法，生成label→class_to_idx的映射字典,以猫狗大战的数据集为例就是**{'cat':0,'dog':1}**。之后```ImageFolder```类是继承```DatasetFolder```的，而```DatasetFolder```是继承```VisionDataset```的。最后，我们来看一下```VisionDataset```的定义：
+需要重点留意一下```make_dataset```方法的定义，它本质上就是用Python自带的```os.walk(root)```的方法来遍历二级目录下有文件，并将符合的文件塞进名为image的列表中，然后将其返回。接着就是类```DatasetFolder(VisionDataset)```的```find_classes```方法，生成label→class_to_idx的映射字典,以猫狗大战的数据集为例就是**{'cat':0,'dog':1}**。之后```ImageFolder```类是继承```DatasetFolder```的，而```DatasetFolder```是继承```VisionDataset```的。最后，我们来看一下```VisionDataset```的定义：
+
 ```python
 class VisionDataset(data.Dataset):
     _repr_indent = 4
@@ -289,7 +290,7 @@ class Dataset(object):
 其实这就是pytorch(或者说其他框架)关于dataset的真相，核心就是有固定长度 ``__len__(self)``,且能迭代其中的元素```__getitem__(self, index)```。
 
 通俗地说一下什么是固定长度和可迭代其中的元素，以```LST = ['a','b','c','d']```这个列表为例:
-这个列表当前的长度是4(其实这里用列表不是很合适，因为在配一条红中列表是可修改的，长度可能会发生变化，更适合的例子是元组)，里面每一个元素其实都可以使用迭代器提取出来，常见的做法就是用下标:
+这个列表当前的长度是4(其实这里用列表不是很合适，因为在Python中列表是可修改的，长度可能会发生变化，更适合的例子是元组)，里面每一个元素其实都可以使用迭代器提取出来，常见的做法就是用下标:
 
 ```python
 In : LST = ['a','b','c','d']
@@ -360,14 +361,19 @@ def default_loader(path):
     def __len__(self):
         return len(self.samples)
 ```
-以**index**作为传参,先确定加载的**path**,然后使用``self.loader(path)``确定**sample**,如果有transforms就对其进行transform。就这样，一个真**·**朴实无华的dataloader就这样被创造出来了。
+以**index**作为传参,先确定加载的**path**,然后使用``self.loader(path)``确定**sample**,如果有``transforms``就对其进行transform。就这样，一个真**·**朴实无华的dataloader就这样被创造出来了。
 
 ## 简单小结 ##
 1. 要定义data source
 
-2. 要定义具体的loader方法
+2. 要定义具体的读取数据方法(一般是``PIL.Image.open()``用加载图片)
 
-关于第一点，官方的方法是用```os.walk(root)```的方法结合```os.path.join(root, fname)```，将所有数据对象塞进一个list里。但在Python中要获取文件列表的方法多得是，只要你把数据清洗这一步预先做好，就可以用```os.listdir()```。如果想突破root目录的限制(比如我们的数据集超过3层甚至都不在同一个根目录)，可以活用```glob.glob()```将他们一次过加载进来。甚至也可以指定具体的辅助的list对原始数据集进行筛选，这样就可以在K-FOLDs交叉验证时不需要重复生成数据，例如:
+3. 在开发的loader中的``__getitem__(self, index)``函数，要注意label的获取+返回方法
+
+4. 确定数据打乱方式shuffle 
+
+### 定义data source ###
+官方的方法是用```os.walk(root)```的方法结合```os.path.join(root, fname)```，将所有数据对象塞进一个list里。但在Python中要获取文件列表的方法多得是，只要你把数据清洗这一步预先做好，就可以用```os.listdir()```。如果想突破root目录的限制(比如我们的数据集超过3层甚至都不在同一个根目录)，可以活用```glob.glob()```将他们一次过加载进来。甚至也可以指定具体的辅助的list对原始数据集进行筛选，这样就可以在K-FOLDs交叉验证时不需要重复生成数据，例如:
 ```python
 import glob
 import os
@@ -382,12 +388,138 @@ def make_dataset(dir, class_to_idx, breed_class,extensions=['jpg', 'jpeg', 'png'
         if not os.path.isdir(d):
             continue
         tmp_list = glob.glob(os.path.join(d,"*.*"))
-        for imgfile in sorted(os.walk(d)):
+        for imgfile in sorted(tmp_list):
            if os.path.basename(imgfile).split('.')[-1]) in extensions:
                images.append(imgfiles)
+
+    return images
 ```
 
-关于第二点，官方的方法是使用```pillow```加载图像，简单粗暴，如果你想玩出花样，可以将loader的过程改为使用其他方式加载/处理图像，比如使用opencv/skimage.io加载图像之后进行一定的转换(截取部分区域或者做一些经典的数字图像处理的变换)。不过要注意的是```transforms.ToTensor()```是基于pillow格式的图像进行转换的，如果坚持用这个方法转为tensor需要自己进行格式调整。
+### 定义具体的读取数据方法 ###
+官方的方法是使用```pillow```加载图像，简单粗暴，如果你想玩出花样，可以将loader的过程改为使用其他方式加载/处理图像，比如使用opencv/skimage.io加载图像之后进行一定的转换(截取部分区域或者做一些经典的数字图像处理的变换)。不过要注意的是```transforms.ToTensor()```是基于pillow格式的图像进行转换的，如果坚持用这个方法转为tensor需要自己进行格式调整。
+
+### label的获取+返回方法 ###
+这一点尤为重要。实际上，我们在pytorch中调用dataloader进行训练时，一般会这样用:
+```python
+for inputs, labels in loader:
+    inputs = inputs.to(device)
+    labels = labels.to(device)
+    optimizer.zero_grad()
+    with torch.set_grad_enabled(phase == 'train'):
+        outputs = model(inputs)
+        _, preds = torch.max(outputs, 1)
+        region_result = preds.data.cpu().numpy()
+        loss = loss_function(outputs, labels)
+```
+如果希望dataloader能在迭代的时候同时返回数据和标签，就需要你在``__getitem__(self, index)``的定义中明确对其进行**_return_**。
+而且通过自定义``__getitem__(self, index)``方法可以根据灵活非方法返回label，而不需要像猫狗数据集那样一定要坚持**root/class_name/×××**的结构然后通过文件路径来获取label。你可以像data list那样在外部传入label list，甚至是更高阶的自定义也可以，可以彻底摆脱数据集本身文件目录结构的影响。
+
+### 定义数据打乱方法 ###
+由于在上述的``make_dataset``这一步生成的data_source，对应的label顺序一般都是非常规则的，无法直接进行训练。所以官方在``torch.utils.data.dataloader``中为自带的``dataloader``这个类提供了**shuffle **的传参,这个传参默认为False，当你需要进行数据打乱的时候，可以将其置位True，之后会这样调用官方内置的sampler方法，大致如下：
+```python
+if batch_sampler is None:
+    if sampler is None:
+        if shuffle:
+            sampler = RandomSampler(dataset)
+        else:
+            sampler = SequentialSampler(dataset)
+    batch_sampler = BatchSampler(sampler, batch_size, drop_last)
+
+self.sampler = sampler
+self.batch_sampler = batch_sampler
+```
+而官方的``RandomSampler``方法是这样定义的:
+
+```python
+class RandomSampler(Sampler):
+    r"""Samples elements randomly. If without replacement, then sample from a shuffled dataset.
+    If with replacement, then user can specify ``num_samples`` to draw.
+
+    Arguments:
+        data_source (Dataset): dataset to sample from
+        replacement (bool): samples are drawn with replacement if ``True``, default=``False``
+        num_samples (int): number of samples to draw, default=`len(dataset)`. This argument
+            is supposed to be specified only when `replacement` is ``True``.
+    """
+
+    def __init__(self, data_source, replacement=False, num_samples=None):
+        self.data_source = data_source
+        self.replacement = replacement
+        self._num_samples = num_samples
+
+        if not isinstance(self.replacement, bool):
+            raise ValueError("replacement should be a boolean value, but got "
+                             "replacement={}".format(self.replacement))
+
+        if self._num_samples is not None and not replacement:
+            raise ValueError("With replacement=False, num_samples should not be specified, "
+                             "since a random permute will be performed.")
+
+        if not isinstance(self.num_samples, int) or self.num_samples <= 0:
+            raise ValueError("num_samples should be a positive integer "
+                             "value, but got num_samples={}".format(self.num_samples))
+
+    @property
+    def num_samples(self):
+        # dataset size might change at runtime
+        if self._num_samples is None:
+            return len(self.data_source)
+        return self._num_samples
+
+    def __iter__(self):
+        n = len(self.data_source)
+        if self.replacement:
+            return iter(torch.randint(high=n, size=(self.num_samples,), dtype=torch.int64).tolist())
+        return iter(torch.randperm(n).tolist())
+
+    def __len__(self):
+        return self.num_samples
+```
+实际上除了``RandomSampler``，官方在``torch.utils.data.sampler``还实现了其他几个很有意思的sampler方法，大家有兴趣可以自行看一下源代码。这里只是重点说一下``RandomSampler``本质上在做的事情，其实关键就在于
+```python
+    def __iter__(self):
+        n = len(self.data_source)
+        if self.replacement:
+            return iter(torch.randint(high=n, size=(self.num_samples,), dtype=torch.int64).tolist())
+        return iter(torch.randperm(n).tolist())
+```
+``torch.randint``或``torch.randperm``虽然无法在Python中进一步查看源代码，但其实对torch有一定了解的都知道，它就是实现有放回/无放回(取决于replacement属性)的sampling方法，所以知道这点，我们就可以自己定义打乱的方法了。
+
+但是，可能会有人有疑问，为什么官方已经帮我们提供好数据打乱的方法，我们还需要自己折腾？
+
+是啊，为什么呢？从一而终地当个快乐的调包侠不好吗？可惜人总需要成长的，而成长又往往是残酷的，成长的第一步就是要敢于揭开新手村那种简单近乎白给的任务那虚幻的面纱，直视现实的无奈和艰辛。为什么我说新手村的场景是白给，因为官方提供的``RandomSampler``方法有一个大前提，就是通过官方内置的``make_dataset``方法生成的data_source，每一个迭代的内容都是一个元素，可以理解为```len(iter(index))==1```，也就说，data_source的每一条内容，能返回data和label，而由于data_source是**image_data file path**的list，label本身就在file path之中，比如猫狗大战中**root/class_name/×××**的data_source内容，label可以和image data一并返回。
+
+然而，我们在前面也假设了一种情况，假如label并不是在image data file path中可以直接呈现出现来，需要在外部进行加载或者自己进行其他较为复杂的处理手段才能返回的时候，naive的``make_dataset``并没有针对具体的label的返回方法，就需要自己另外实现。下面列举一个简单的场景，假设data_source的list已经在外部生成好，list中每一个data对应的lable按顺序组成的lable_list也已经在外部生成好，定义一个简单的data_set类，以这两者作为传参，大致如下:
+
+```python
+import torch.utils.data as data
+import torchvision.transforms as transforms
+import PIL.Image as Image
+import random
+
+class simple_dataset(data.Dataset):
+    def __init__(self, data_list=None,label_list = None，shuffle = False):
+        self.data_source = [(data_list[x], label_list[x]) for x in range(len(data_list))]
+        # 这一步相当于简易版的make_dateset方法，注意到data_source的list中每一个内容都是一个二元元组，前者是data，后者是label
+        self.shuffle = shuffle
+
+    def shuffletraindata(self):
+        if self.shuffle:
+            self.data_source = random.sample(self.data_source, len(self.data_source))
+            # 使用random.sample代替官方内置方法中的torch.randint()/torch.randperm().tolist()
+
+    def __getitem__(self,index):
+        img_file_path,label = self.data_source[index]
+        img = Image.open(img_file_path)
+        if self.transform is not None:
+            img = self.transform(img)
+        return img, label
+
+    def __len__(self):
+        return len(self.data_source)
+```
+
+在这里，需要打乱数据时，还得手工调用`shuffletraindata`的方法，和原来官方的方法相比，有什么不同？官方的方法能直接用在上述代码中的data_source上吗？这个留给大家思考一下。此外就是，不管上述方法还是官方的方法，都不能保证打乱后的数据在以batch为单位进行迭代时，对应的lable分布是相似的，如果batch size比较少的时候确实不利于训练。但掌握了上面的范例之后，就可以自己定义符合自己需求的shuffle和Sampler方法了。
 
 ## 试试看 ##
 1 在``transforms``已有的方法上开发新的data_augmention方法
@@ -396,10 +528,12 @@ def make_dataset(dir, class_to_idx, breed_class,extensions=['jpg', 'jpeg', 'png'
 
 3 支持更高级的文件loader方法，如```openslide```格式的图片的数据源的读取
 
-![](./pic/2.jpg)
 
-### 参考方法 ###
+### 参考代码 ###
+此前针对个人工作上的项目做的一些小的修改，后续会保持更新，欢迎拍砖指正
+
 https://github.com/BohriumKwong/pytorch_data_augmention_loader
 
 https://github.com/BohriumKwong/using-weakly-supervised-deep-learning-on-whole-slide-images
 
+![](./pic/2.jpg)
